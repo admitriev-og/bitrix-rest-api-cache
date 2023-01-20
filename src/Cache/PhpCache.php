@@ -4,7 +4,7 @@ namespace BitrixRestApiCache\Cache;
 
 use BitrixRestApi\Responser\Response\BaseSuccessResponse;
 use CPHPCache;
-use Symfony\Component\HttpFoundation\Request;
+use \Slim\Psr7\Request;
 
 class PhpCache
 {
@@ -66,6 +66,23 @@ class PhpCache
         CacheManager::addTag($tag);
     }
 
+    public function addTagList(array $list)
+    {
+        foreach ($list as $item) {
+            if (is_object($item) && method_exists($item, 'getId')) {
+                CacheManager::addTag($item->getId());
+            }
+            if (is_array($item) && isset($item['ID'])) {
+                CacheManager::addTag($item['ID']);
+            }
+        }
+    }
+
+    public function getCacheId() :string
+    {
+        return $this->cacheId;
+    }
+
     public function cache($result)
     {
         $this->cache->StartDataCache();
@@ -75,6 +92,12 @@ class PhpCache
 
         if ($result instanceof BaseSuccessResponse) {
             $result->setCacheId($this->cacheId);
+        }
+
+        if (!empty($result['cacheTags'])) {
+            foreach ($result['cacheTags'] as $tag) {
+                CacheManager::addTag($tag);
+            }
         }
 
         $this->cache->EndDataCache(['result' => $result]);

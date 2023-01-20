@@ -2,7 +2,7 @@
 
 namespace BitrixRestApiCache\Cache;
 
-use Symfony\Component\HttpFoundation\Request;
+use \Slim\Psr7\Request;
 
 class CacheManager
 {
@@ -11,18 +11,18 @@ class CacheManager
 
     public static function getCacheId(Request $request)
     {
-        $getParams = $request->query->all();
+        $getParams = $request->getQueryParams();
         ksort($getParams);
 
         // JSON_NUMERIC_CHECK
         $cacheId = md5(json_encode($getParams, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT));
 
-        $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+        $schemeAndHttpHost = 'https://' . $request->getServerParams()['HTTP_HOST'];
         if (isset($_ENV['HOST']) && isset($_ENV['SCHEME']) && $_ENV['HOST'] && $_ENV['SCHEME']) {
             $schemeAndHttpHost = $_ENV['SCHEME'] . "://" . $_ENV['HOST'];
         }
-        //$cacheId = $request->getSchemeAndHttpHost().$request->getPathInfo()."_".$cacheId;
-        $cacheId = $schemeAndHttpHost . $request->getPathInfo() . "_" . $cacheId;
+
+        $cacheId = $schemeAndHttpHost . parse_url($request->getRequestTarget(), PHP_URL_PATH) . "_" . $cacheId;
         $cacheId = str_replace("@", "_", $cacheId);
         $cacheId = str_replace(",", "_", $cacheId);
         $cacheId = str_replace(";", "_", $cacheId);
