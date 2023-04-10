@@ -3,7 +3,7 @@
   "description": "Библиотека для кеша приложения основенного на апи",
   "type": "library",
   "require": {
-    "php": ">=8.0",
+    "php": ">=7.4",
     "predis/predis": "^1.1",
     "slim/psr7": "^1.6"
   },
