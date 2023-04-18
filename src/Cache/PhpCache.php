@@ -86,7 +86,7 @@ class PhpCache
     public function cache($result)
     {
         $this->cache->StartDataCache();
-        CacheManager::end();
+        CacheManager::start($this->getCacheId());
 
         $this->endTime = new \DateTime();
 
@@ -100,6 +100,8 @@ class PhpCache
             }
         }
 
+        CacheManager::end();
         $this->cache->EndDataCache(['result' => $result]);
     }
 }
+
