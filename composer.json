@@ -5,7 +5,7 @@
   "require": {
     "php": ">=7.4",
     "predis/predis": "^1.1",
-    "slim/psr7": "^1.6"
+    "slim/psr7": "dev-master"
   },
   "minimum-stability": "stable",
   "autoload": {
