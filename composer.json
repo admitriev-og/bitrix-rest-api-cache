@@ -1,5 +1,5 @@
 {
-  "name": "vsavritsky/bitrix-rest-api-cache",
+  "name": "ogdev/bitrix-rest-api-cache",
   "description": "Библиотека для кеша приложения основенного на апи",
   "type": "library",
   "require": {
